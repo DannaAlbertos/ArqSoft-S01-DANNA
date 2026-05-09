@@ -1,10 +1,16 @@
-﻿<!DOCTYPE html>
+﻿@model List<Catalogo.Models.Item>
+
+@{
+    ViewData["Title"] = "Catálogo de Carros Deportivos";
+}
+
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo de Carros Deportivos - Proyecto Escolar</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Catálogo de Carros Deportivos</title>
+    <link rel="stylesheet" href="~/css/site.css">
 </head>
 <body>
     <!-- NAVBAR -->
@@ -47,7 +53,7 @@
                 <button class="btn btn-primary" onclick="document.getElementById('carros').scrollIntoView({behavior: 'smooth'})">
                     Ver Catálogo
                 </button>
-                <button class="btn btn-outline">Más Información</button>
+                <a href="@Url.Action("Agregar", "Catalogo")" class="btn btn-outline">Agregar Carro</a>
             </div>
         </div>
     </section>
@@ -55,28 +61,15 @@
     <!-- FILTROS -->
     <section class="filters-section">
         <div class="container">
-            <h2>Filtrar por Marca</h2>
+            <h2>Filtrar por Tipo de Motor</h2>
             <div class="filters">
                 <div class="filter-group">
-                    <label>Marca</label>
-                    <select id="filterBrand">
-                        <option value="">Todas las marcas</option>
-                        <option value="Ferrari">Ferrari</option>
-                        <option value="Lamborghini">Lamborghini</option>
-                        <option value="Porsche">Porsche</option>
-                        <option value="McLaren">McLaren</option>
-                        <option value="Bugatti">Bugatti</option>
-                        <option value="Rolls-Royce">Rolls-Royce</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label>Tipo de Motor</label>
-                    <select id="filterType">
-                        <option value="">Todos los tipos</option>
-                        <option value="V12">V12</option>
-                        <option value="V8">V8</option>
-                        <option value="Híbrido">Híbrido</option>
-                    </select>
+                    <a href="@Url.Action("Index", "Catalogo")" class="filter-link">Todos</a>
+                    @foreach (var motor in ViewBag.Motores as List<string>)
+                    {
+                        <span> | </span>
+                        <a href="@Url.Action("Index", "Catalogo", new { motor = motor })" class="filter-link">@motor</a>
+                    }
                 </div>
             </div>
         </div>
@@ -87,7 +80,27 @@
         <div class="container">
             <h2 class="section-title">Nuestro Catálogo</h2>
             <div class="cars-grid" id="carsGrid">
-                <!-- Las tarjetas se generan con JS -->
+                @foreach (var item in Model)
+                {
+                    <div class="car-card">
+                        <div class="car-card-inner">
+                            <div class="car-card-front">
+                                <div class="car-card-image-wrapper">
+                                    <img src="@item.Imagen" alt="@item.Modelo" class="car-card-image">
+                                    <div class="car-badge">@item.Motor</div>
+                                </div>
+                                <div class="car-card-body">
+                                    <h3 class="car-card-title">@item.Modelo</h3>
+                                    <p class="car-card-subtitle">@item.Marca</p>
+                                    <p class="car-card-description">@item.Descripcion</p>
+                                    <a href="@Url.Action("Detalle", "Catalogo", new { id = item.Id })" class="btn btn-primary">
+                                        Ver Detalles
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </section>
@@ -199,7 +212,7 @@
                 <div class="footer-section">
                     <h4>Tecnologías Usadas</h4>
                     <div class="social-links">
-                        <a href="#">HTML5</a>
+                        <a href="#">ASP.NET Core</a>
                         <a href="#">CSS3</a>
                         <a href="#">JavaScript</a>
                     </div>
@@ -211,6 +224,6 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="~/js/site.js"></script>
 </body>
 </html>

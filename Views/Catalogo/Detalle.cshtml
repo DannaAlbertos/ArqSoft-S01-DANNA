@@ -1,9 +1,25 @@
 ﻿@model Catalogo.Models.Item
-<h1>@Model.Modelo</h1>
-<p><strong>Modelo:</strong> @Model.Modelo</p>
-<p><strong>Marca:</strong> @Model.Marca</p>
-<p><strong>Año:</strong> @Model.Ano</p>
-<p><strong>Motor:</strong> @Model.Motor</p>
-<p><strong>Descripción:</strong> @Model.Descripcion</p>
-<hr />
-<a asp-action="Index">&larr; Volver al Catálogo</a>
+
+@{
+    ViewData["Title"] = Model.Modelo;
+}
+
+<div class="container" style="padding: 40px 20px;">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <img src="@Model.Imagen" alt="@Model.Modelo" style="width: 100%; border-radius: 12px; margin-bottom: 30px;">
+        
+        <h1 style="font-size: 2.5rem; margin-bottom: 20px;">@Model.Modelo</h1>
+        
+        <div style="background: rgba(220, 38, 38, 0.1); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+            <p><strong>Marca:</strong> @Model.Marca</p>
+            <p><strong>Tipo de Motor:</strong> @Model.Motor</p>
+            <p><strong>Año:</strong> @Model.Ano</p>
+            <p><strong>Descripción:</strong> @Model.Descripcion</p>
+        </div>
+
+        <div style="display: flex; gap: 15px;">
+            <a href="@Url.Action("Index", "Catalogo")" class="btn btn-primary">← Volver al Catálogo</a>
+            <a href="@Url.Action("Agregar", "Catalogo")" class="btn btn-outline">+ Agregar Carro</a>
+        </div>
+    </div>
+</div>
