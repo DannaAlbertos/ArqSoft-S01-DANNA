@@ -1,275 +1,311 @@
-﻿// ============================================
-// CATÁLOGO DE CARROS - ANIMACIONES Y EFECTOS
-// ============================================
-
-document.addEventListener('DOMContentLoaded', function () {
-
-    // Animación de entrada para elementos
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('fade-in-up');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    // Observar todas las cards
-    document.querySelectorAll('.card').forEach(card => {
-        observer.observe(card);
-    });
-
-    // Efecto de sonido al hover (simulado con vibración en móviles)
-    document.querySelectorAll('.btn').forEach(button => {
-        button.addEventListener('mouseenter', function () {
-            if (navigator.vibrate) {
-                navigator.vibrate(10);
-            }
-        });
-
-        button.addEventListener('click', function (e) {
-            // Efecto ripple
-            const ripple = document.createElement('span');
-            ripple.classList.add('ripple-effect');
-            const rect = this.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            ripple.style.width = ripple.style.height = size + 'px';
-            ripple.style.left = e.clientX - rect.left - size / 2 + 'px';
-            ripple.style.top = e.clientY - rect.top - size / 2 + 'px';
-            this.appendChild(ripple);
-
-            setTimeout(() => ripple.remove(), 600);
-        });
-    });
-
-    // Indicador de velocidad animado
-    createSpeedIndicator();
-
-    // Efecto parallax en las cards
-    document.addEventListener('mousemove', (e) => {
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
-                const xRotation = ((y / rect.height) - 0.5) * 10;
-                const yRotation = ((x / rect.width) - 0.5) * -10;
-                card.style.transform = `perspective(1000px) rotateX(${xRotation}deg) rotateY(${yRotation}deg) translateY(-10px) scale(1.02)`;
-            }
-        });
-    });
-
-    // Resetear transformación cuando el mouse sale
-    document.querySelectorAll('.card').forEach(card => {
-        card.addEventListener('mouseleave', function () {
-            this.style.transform = '';
-        });
-    });
-
-    // Contador de RPM animado
-    animateRPM();
-
-    // Partículas de velocidad
-    createSpeedParticles();
-
-    // Efecto de luces de freno al hacer scroll
-    let lastScrollTop = 0;
-    window.addEventListener('scroll', function () {
-        let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-        if (scrollTop > lastScrollTop) {
-            // Scrolling down
-            document.body.style.setProperty('--scroll-glow', 'rgba(220, 0, 0, 0.2)');
-        } else {
-            // Scrolling up
-            document.body.style.setProperty('--scroll-glow', 'rgba(0, 212, 255, 0.2)');
-        }
-
-        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-    }, false);
-
-    // Auto-completar formularios con efecto
-    document.querySelectorAll('.form-control').forEach(input => {
-        input.addEventListener('input', function () {
-            if (this.value.length > 0) {
-                this.style.borderColor = 'var(--neon-blue)';
-                this.style.boxShadow = '0 0 10px rgba(0, 212, 255, 0.3)';
-            } else {
-                this.style.borderColor = '';
-                this.style.boxShadow = '';
-            }
-        });
-    });
-
-    // Filtro de búsqueda animado
-    const searchInput = document.querySelector('input[type="search"], input[placeholder*="Buscar"]');
-    if (searchInput) {
-        searchInput.addEventListener('input', function () {
-            const searchTerm = this.value.toLowerCase();
-            document.querySelectorAll('.card').forEach(card => {
-                const text = card.textContent.toLowerCase();
-                if (text.includes(searchTerm)) {
-                    card.style.display = '';
-                    card.style.animation = 'fadeInUp 0.4s ease-out';
-                } else {
-                    card.style.opacity = '0';
-                    setTimeout(() => {
-                        if (!card.textContent.toLowerCase().includes(searchInput.value.toLowerCase())) {
-                            card.style.display = 'none';
-                        }
-                    }, 300);
-                }
-            });
-        });
+﻿// ==================== DATOS DE CARROS ====================
+const cars = [
+    {
+        id: 1,
+        name: "Ferrari F8 Tributo",
+        brand: "Ferrari",
+        type: "V12",
+        image: "https://images.pexels.com/photos/29831790/pexels-photo-29831790.jpeg",
+        hp: "720 HP",
+        speed: "340 km/h",
+        acceleration: "2.9s"
+    },
+    {
+        id: 2,
+        name: "Lamborghini Revuelto",
+        brand: "Lamborghini",
+        type: "Híbrido",
+        image: "https://images.pexels.com/photos/37147592/pexels-photo-37147592.jpeg",
+        hp: "1001 HP",
+        speed: "350 km/h",
+        acceleration: "2.5s"
+    },
+    {
+        id: 3,
+        name: "Porsche 911 Turbo",
+        brand: "Porsche",
+        type: "V8",
+        image: "https://images.pexels.com/photos/33621572/pexels-photo-33621572.jpeg",
+        hp: "640 HP",
+        speed: "330 km/h",
+        acceleration: "2.7s"
+    },
+    {
+        id: 4,
+        name: "McLaren 720S",
+        brand: "McLaren",
+        type: "V8",
+        image: "https://images.pexels.com/photos/12568066/pexels-photo-12568066.jpeg",
+        hp: "710 HP",
+        speed: "341 km/h",
+        acceleration: "2.8s"
+    },
+    {
+        id: 5,
+        name: "Bugatti Chiron",
+        brand: "Bugatti",
+        type: "V12",
+        image: "https://images.pexels.com/photos/12964186/pexels-photo-12964186.jpeg",
+        hp: "1500 HP",
+        speed: "420 km/h",
+        acceleration: "2.4s"
+    },
+    {
+        id: 6,
+        name: "Rolls-Royce Phantom",
+        brand: "Rolls-Royce",
+        type: "V12",
+        image: "https://images.pexels.com/photos/26161350/pexels-photo-26161350.jpeg",
+        hp: "563 HP",
+        speed: "250 km/h",
+        acceleration: "5.1s"
+    },
+    {
+        id: 7,
+        name: "Ferrari SF90 Stradale",
+        brand: "Ferrari",
+        type: "Híbrido",
+        image: "https://images.pexels.com/photos/32261029/pexels-photo-32261029.jpeg",
+        hp: "986 HP",
+        speed: "340 km/h",
+        acceleration: "2.5s"
+    },
+    {
+        id: 8,
+        name: "Lamborghini Aventador",
+        brand: "Lamborghini",
+        type: "V12",
+        image: "https://images.pexels.com/photos/6968984/pexels-photo-6968984.jpeg",
+        hp: "759 HP",
+        speed: "350 km/h",
+        acceleration: "2.9s"
     }
+];
+
+// ==================== TYPEWRITER EFFECT ====================
+function typewriter(element, text, speed = 50) {
+    let index = 0;
+    element.textContent = '';
+    
+    function type() {
+        if (index < text.length) {
+            element.textContent += text.charAt(index);
+            index++;
+            setTimeout(type, speed);
+        }
+    }
+    
+    type();
+}
+
+// Iniciar typewriter al cargar
+window.addEventListener('load', () => {
+    typewriter(document.getElementById('typewriter'), 'Descubre los Carros Más Rápidos del Mundo', 50);
 });
 
-// Función para crear indicador de velocidad
-function createSpeedIndicator() {
-    const indicator = document.createElement('div');
-    indicator.className = 'speed-indicator';
-    indicator.innerHTML = 'RPM';
-    document.body.appendChild(indicator);
-}
-
-// Animación de RPM
-function animateRPM() {
-    const indicator = document.querySelector('.speed-indicator');
-    if (!indicator) return;
-
-    let rpm = 0;
-    setInterval(() => {
-        rpm = Math.floor(Math.random() * 9000) + 1000;
-        const displayRPM = (rpm / 1000).toFixed(1);
-        indicator.innerHTML = `${displayRPM}<small style="font-size: 0.6rem;">K</small>`;
-    }, 2000);
-}
-
-// Partículas de velocidad
-function createSpeedParticles() {
-    const particlesContainer = document.createElement('div');
-    particlesContainer.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 1;
-        overflow: hidden;
-    `;
-    document.body.insertBefore(particlesContainer, document.body.firstChild);
-
-    function createParticle() {
-        const particle = document.createElement('div');
-        const color = Math.random() > 0.5 ? 'rgba(220, 0, 0, 0.3)' : 'rgba(0, 212, 255, 0.3)';
-        const size = Math.random() * 3 + 1;
-
-        particle.style.cssText = `
-            position: absolute;
-            width: ${size}px;
-            height: ${size}px;
-            background: ${color};
-            border-radius: 50%;
-            right: -10px;
-            top: ${Math.random() * 100}%;
-            animation: particleMove ${Math.random() * 3 + 2}s linear;
-            box-shadow: 0 0 10px ${color};
+// ==================== RENDERIZAR CARROS ====================
+function renderCars(carsToRender = cars) {
+    const grid = document.getElementById('carsGrid');
+    grid.innerHTML = '';
+    
+    carsToRender.forEach((car, index) => {
+        const card = document.createElement('div');
+        card.className = 'car-card';
+        card.style.animationDelay = `${index * 0.1}s`;
+        
+        card.innerHTML = `
+            <div class="car-card-inner">
+                <div class="car-card-front">
+                    <div class="car-card-image-wrapper">
+                        <img src="${car.image}" alt="${car.name}" class="car-card-image">
+                        <div class="car-badge">${car.type}</div>
+                    </div>
+                    <div class="car-card-body">
+                        <h3 class="car-card-title">${car.name}</h3>
+                        <p class="car-card-subtitle">${car.brand}</p>
+                        <p class="car-card-description">Uno de los carros deportivos más icónicos del mundo</p>
+                        <button class="btn btn-primary" onclick="this.closest('.car-card').classList.toggle('flipped')">
+                            Ver Especificaciones
+                        </button>
+                    </div>
+                </div>
+                <div class="car-card-back">
+                    <div class="car-specs">
+                        <div class="spec-item">
+                            <span class="spec-label">Potencia</span>
+                            <span class="spec-value">${car.hp}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Velocidad Máx</span>
+                            <span class="spec-value">${car.speed}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">0-100 km/h</span>
+                            <span class="spec-value">${car.acceleration}</span>
+                        </div>
+                        <div class="spec-item">
+                            <span class="spec-label">Motor</span>
+                            <span class="spec-value">${car.type}</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="this.closest('.car-card').classList.toggle('flipped')">
+                        Volver
+                    </button>
+                </div>
+            </div>
         `;
-
-        particlesContainer.appendChild(particle);
-
-        particle.addEventListener('animationend', () => {
-            particle.remove();
-        });
-    }
-
-    // CSS para animación de partículas
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes particleMove {
-            to {
-                transform: translateX(-100vw);
-                opacity: 0;
-            }
-        }
         
-        .ripple-effect {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(220, 0, 0, 0.4);
-            animation: ripple 0.6s ease-out;
-            pointer-events: none;
-        }
-        
-        @keyframes ripple {
-            to {
-                transform: scale(2);
-                opacity: 0;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-
-    // Crear partículas periódicamente
-    setInterval(createParticle, 200);
-}
-
-// Función para añadir efecto hover 3D mejorado
-function enhance3DEffect() {
-    document.querySelectorAll('.card').forEach(card => {
-        card.style.transition = 'transform 0.1s ease-out';
+        grid.appendChild(card);
     });
 }
 
-enhance3DEffect();
+// ==================== FILTROS ====================
+function filterCars() {
+    const brand = document.getElementById('filterBrand').value;
+    const type = document.getElementById('filterType').value;
+    
+    const filtered = cars.filter(car => {
+        return (!brand || car.brand === brand) &&
+               (!type || car.type === type);
+    });
+    
+    renderCars(filtered);
+}
 
-// Easter egg: Konami Code para modo turbo
-let konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-let konamiIndex = 0;
+// Event listeners para filtros
+document.getElementById('filterBrand').addEventListener('change', filterCars);
+document.getElementById('filterType').addEventListener('change', filterCars);
 
-document.addEventListener('keydown', (e) => {
-    if (e.key === konamiCode[konamiIndex]) {
-        konamiIndex++;
-        if (konamiIndex === konamiCode.length) {
-            activateTurboMode();
-            konamiIndex = 0;
+// ==================== CONTAR NÚMEROS ====================
+function countUp(element, target, duration = 2000) {
+    let current = 0;
+    const increment = target / (duration / 16);
+    
+    const timer = setInterval(() => {
+        current += increment;
+        if (current >= target) {
+            element.textContent = target;
+            clearInterval(timer);
+        } else {
+            element.textContent = Math.floor(current);
         }
-    } else {
-        konamiIndex = 0;
-    }
+    }, 16);
+}
+
+// Activar contadores cuando se ven
+const countObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const target = parseInt(entry.target.getAttribute('data-count'));
+            countUp(entry.target, target);
+            countObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('[data-count]').forEach(element => {
+    countObserver.observe(element);
 });
 
-function activateTurboMode() {
-    document.body.style.animation = 'turboShake 0.5s ease-in-out';
-    const allCards = document.querySelectorAll('.card');
-    allCards.forEach((card, index) => {
-        setTimeout(() => {
-            card.style.animation = 'fadeInUp 0.3s ease-out';
-        }, index * 50);
-    });
+// ==================== CARRUSEL DE DATOS ====================
+let currentTestimonial = 0;
+const testimonials = document.querySelectorAll('.testimonial-card');
 
-    setTimeout(() => {
-        document.body.style.animation = '';
-    }, 500);
+function showTestimonial(index) {
+    testimonials.forEach(card => card.classList.remove('active'));
+    testimonials[index].classList.add('active');
 }
 
-const turboStyle = document.createElement('style');
-turboStyle.textContent = `
-    @keyframes turboShake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-10px); }
-        75% { transform: translateX(10px); }
+function nextTestimonial() {
+    currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+    showTestimonial(currentTestimonial);
+}
+
+function prevTestimonial() {
+    currentTestimonial = (currentTestimonial - 1 + testimonials.length) % testimonials.length;
+    showTestimonial(currentTestimonial);
+}
+
+// Auto-play datos
+setInterval(nextTestimonial, 5000);
+
+// ==================== HAMBURGER MENU ====================
+document.querySelector('.hamburger').addEventListener('click', () => {
+    document.querySelector('.nav-links').classList.toggle('active');
+});
+
+// Cerrar menu al hacer click en un link
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+        document.querySelector('.nav-links').classList.remove('active');
+    });
+});
+
+// ==================== SCROLL NAVBAR ====================
+let lastScrollTop = 0;
+const navbar = document.querySelector('.navbar');
+
+window.addEventListener('scroll', () => {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    if (scrollTop > lastScrollTop && scrollTop > 100) {
+        navbar.style.transform = 'translateY(-100%)';
+    } else {
+        navbar.style.transform = 'translateY(0)';
+    }
+    
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+});
+
+navbar.style.transition = 'transform 0.3s ease';
+
+// ==================== RIPPLE EFFECT ====================
+document.querySelectorAll('.btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.classList.add('ripple');
+        
+        this.appendChild(ripple);
+        
+        setTimeout(() => ripple.remove(), 600);
+    });
+});
+
+// Estilos para ripple
+const style = document.createElement('style');
+style.textContent = `
+    .btn {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.6);
+        transform: scale(0);
+        animation: ripple 0.6s ease-out;
+        pointer-events: none;
+    }
+    
+    @keyframes ripple {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
     }
 `;
-document.head.appendChild(turboStyle);
+document.head.appendChild(style);
 
-console.log('%c🏎️ CATÁLOGO DE CARROS ACTIVADO 🏎️', 'color: #DC0000; font-size: 20px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);');
-console.log('%c¡Intenta el código Konami para activar el modo turbo! ↑↑↓↓←→←→BA', 'color: #00d4ff; font-size: 12px;');
+// ==================== INICIALIZAR ====================
+renderCars();
+
+console.log('🏎️ Catálogo de Carros Deportivos - Proyecto Escolar Cargado');

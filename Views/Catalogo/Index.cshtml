@@ -1,16 +1,216 @@
-﻿@model List<Catalogo.Models.Item>
-<h1>Mi Catálogo</h1>
-<!-- Filtro por género -->
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Carros Deportivos - Proyecto Escolar</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">⚡ CARROS DEPORTIVOS</div>
+            <ul class="nav-links">
+                <li><a href="#home">Inicio</a></li>
+                <li><a href="#carros">Catálogo</a></li>
+                <li><a href="#features">Información</a></li>
+                <li><a href="#testimonios">Datos</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
 
-<hr />
-<!-- Lista de items -->
-<ul>
-    @foreach (var item in Model)
-    {
-        <li>
-            <a asp-action="Detalle" asp-route-id="@item.Id">@item.Modelo</a>-- @item.Marca (@item.Ano)
-        </li>
-    }
-</ul>
-<hr />
-<a asp-action="Agregar">+ Agregar Videojuego</a>
+    <!-- HERO SECTION -->
+    <section class="hero" id="home">
+        <div class="hero-background">
+            <img src="https://images.unsplash.com/photo-1552962671-1f22757105bd?w=1200&h=600&fit=crop" alt="Hero Background">
+            <div class="hero-overlay"></div>
+        </div>
+        
+        <div class="particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+
+        <div class="hero-content">
+            <h1 class="hero-title">CARROS DEPORTIVOS</h1>
+            <p class="hero-subtitle" id="typewriter"></p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary" onclick="document.getElementById('carros').scrollIntoView({behavior: 'smooth'})">
+                    Ver Catálogo
+                </button>
+                <button class="btn btn-outline">Más Información</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FILTROS -->
+    <section class="filters-section">
+        <div class="container">
+            <h2>Filtrar por Marca</h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Marca</label>
+                    <select id="filterBrand">
+                        <option value="">Todas las marcas</option>
+                        <option value="Ferrari">Ferrari</option>
+                        <option value="Lamborghini">Lamborghini</option>
+                        <option value="Porsche">Porsche</option>
+                        <option value="McLaren">McLaren</option>
+                        <option value="Bugatti">Bugatti</option>
+                        <option value="Rolls-Royce">Rolls-Royce</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Tipo de Motor</label>
+                    <select id="filterType">
+                        <option value="">Todos los tipos</option>
+                        <option value="V12">V12</option>
+                        <option value="V8">V8</option>
+                        <option value="Híbrido">Híbrido</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GRID DE CARROS -->
+    <section class="cars-section" id="carros">
+        <div class="container">
+            <h2 class="section-title">Nuestro Catálogo</h2>
+            <div class="cars-grid" id="carsGrid">
+                <!-- Las tarjetas se generan con JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CARACTERÍSTICAS -->
+    <section class="features-section" id="features">
+        <div class="container">
+            <h2 class="section-title">Características de los Carros Deportivos</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Aceleración Extrema</h3>
+                    <p>Capaces de alcanzar 0-100 km/h en menos de 3 segundos</p>
+                    <div class="feature-number" data-count="3">0</div>
+                    <span>Segundos Promedio</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏁</div>
+                    <h3>Velocidad Máxima</h3>
+                    <p>Algunos modelos superan los 400 km/h de velocidad</p>
+                    <div class="feature-number" data-count="400">0</div>
+                    <span>km/h Máximo</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💪</div>
+                    <h3>Potencia del Motor</h3>
+                    <p>Motores con más de 1000 caballos de fuerza</p>
+                    <div class="feature-number" data-count="1000">0</div>
+                    <span>Caballos de Fuerza</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3>Tecnología Avanzada</h3>
+                    <p>Sistemas de suspensión y aerodinámica de última generación</p>
+                    <div class="feature-number" data-count="2024">0</div>
+                    <span>Año de Tecnología</span>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Marcas Legendarias</h3>
+                    <p>Fabricantes de carros deportivos reconocidos mundialmente</p>
+                    <div class="feature-number" data-count="8">0</div>
+                    <span>Marcas en Catálogo</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DATOS INTERESANTES -->
+    <section class="testimonials-section" id="testimonios">
+        <div class="container">
+            <h2 class="section-title">Datos Interesantes</h2>
+            <div class="testimonials-carousel">
+                <div class="testimonial-card active">
+                    <div class="stars">🏆</div>
+                    <p>"El Ferrari F8 Tributo es uno de los carros más rápidos del mundo, con un motor V12 de 720 caballos de fuerza"</p>
+                    <h4>Ferrari F8 Tributo</h4>
+                    <span>Deportivo Italiano</span>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">🏆</div>
+                    <p>"El Bugatti Chiron es el carro más potente jamás fabricado, con 1500 caballos de fuerza"</p>
+                    <h4>Bugatti Chiron</h4>
+                    <span>Hiperdeportivo Francés</span>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">🏆</div>
+                    <p>"El Lamborghini Revuelto combina potencia extrema con tecnología híbrida de última generación"</p>
+                    <h4>Lamborghini Revuelto</h4>
+                    <span>Deportivo Italiano Híbrido</span>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">🏆</div>
+                    <p>"El Porsche 911 Turbo es un ícono del automovilismo deportivo con más de 70 años de historia"</p>
+                    <h4>Porsche 911 Turbo</h4>
+                    <span>Deportivo Alemán Clásico</span>
+                </div>
+            </div>
+            <div class="carousel-controls">
+                <button class="carousel-btn prev" onclick="prevTestimonial()">❮</button>
+                <button class="carousel-btn next" onclick="nextTestimonial()">❯</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Catálogo de Carros Deportivos</h3>
+                    <p>Proyecto escolar que presenta los carros deportivos más icónicos del mundo.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="#home">Inicio</a></li>
+                        <li><a href="#carros">Catálogo</a></li>
+                        <li><a href="#features">Información</a></li>
+                        <li><a href="#testimonios">Datos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Sobre Este Proyecto</h4>
+                    <p>📚 Proyecto Escolar</p>
+                    <p>🎓 Educativo</p>
+                    <p>💻 Desarrollo Web</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Tecnologías Usadas</h4>
+                    <div class="social-links">
+                        <a href="#">HTML5</a>
+                        <a href="#">CSS3</a>
+                        <a href="#">JavaScript</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Proyecto Escolar - Catálogo de Carros Deportivos</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
