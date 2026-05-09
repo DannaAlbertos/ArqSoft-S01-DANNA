@@ -6,7 +6,6 @@ Este es un catálogo interactivo de carros deportivos desarrollado como **proyec
 
 ## Tecnologías Usadas
 
-### Frontend:
 - **HTML5** - Estructura semántica y accesible
 - **CSS3** - Estilos avanzados con:
   - Gradientes dinámicos
